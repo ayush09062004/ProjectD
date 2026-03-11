@@ -163,8 +163,7 @@ html, body, [class*="css"], .stApp {
 
 /* ── INPUTS ── */
 .stTextInput > div > div > input,
-.stTextArea > div > div > textarea,
-.stSelectbox > div > div {
+.stTextArea > div > div > textarea {
     background: var(--navy2) !important;
     border: 1px solid var(--border) !important;
     border-radius: 10px !important;
@@ -177,7 +176,55 @@ html, body, [class*="css"], .stApp {
     border-color: var(--gold) !important;
     box-shadow: 0 0 0 3px rgba(212,160,23,0.15) !important;
 }
-.stSelectbox > div > div { padding: 0.5rem 1rem !important; }
+
+/* ── SELECTBOX — full override for visibility ── */
+.stSelectbox > div > div {
+    background: #1e2a5e !important;
+    border: 1.5px solid var(--gold) !important;
+    border-radius: 10px !important;
+    color: #FFFFFF !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.95rem !important;
+    padding: 0.45rem 1rem !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+.stSelectbox > div > div > div {
+    color: #FFFFFF !important;
+    font-weight: 500 !important;
+}
+/* Arrow icon */
+.stSelectbox svg { fill: var(--gold) !important; stroke: var(--gold) !important; }
+
+/* Dropdown popup list */
+div[data-baseweb="popover"],
+div[data-baseweb="select"] ul,
+div[role="listbox"] {
+    background: #1a2460 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+}
+div[role="option"] {
+    background: transparent !important;
+    color: rgba(255,255,255,0.88) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem 1rem !important;
+}
+div[role="option"]:hover,
+div[role="option"][aria-selected="true"] {
+    background: rgba(212,160,23,0.18) !important;
+    color: var(--gold2) !important;
+}
+li[role="option"] {
+    color: rgba(255,255,255,0.88) !important;
+    background: transparent !important;
+}
+li[role="option"]:hover {
+    background: rgba(212,160,23,0.18) !important;
+    color: var(--gold2) !important;
+}
+
 label { color: rgba(255,255,255,0.7) !important; font-size: 0.85rem !important; }
 
 /* ── EXAMPLE CHIPS ── */
@@ -216,6 +263,24 @@ div[data-testid="stFormSubmitButton"] > button {
 .stButton > button[kind="primary"]:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 30px rgba(255,107,0,0.45) !important;
+}
+
+/* ── SECONDARY BUTTON (inactive lang chips + general) ── */
+.stButton > button[kind="secondary"] {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid rgba(212,160,23,0.28) !important;
+    color: rgba(255,255,255,0.62) !important;
+    border-radius: 30px !important;
+    font-size: 0.82rem !important;
+    font-weight: 600 !important;
+    padding: 0.35rem 0.5rem !important;
+    transition: all 0.18s ease !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+.stButton > button[kind="secondary"]:hover {
+    border-color: var(--gold) !important;
+    color: var(--gold2) !important;
+    background: rgba(212,160,23,0.1) !important;
 }
 
 /* ── RESULT CARD ── */
@@ -419,6 +484,38 @@ div[data-testid="stFormSubmitButton"] > button {
     line-height: 1.55;
 }
 
+/* ── LANGUAGE CHIPS ── */
+.lang-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 0.2rem;
+}
+.lang-chip {
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid rgba(212,160,23,0.3);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.65);
+    transition: all 0.18s ease;
+    user-select: none;
+    letter-spacing: 0.02em;
+}
+.lang-chip:hover {
+    border-color: var(--gold);
+    color: var(--gold2);
+    background: rgba(212,160,23,0.1);
+}
+.lang-chip.active {
+    background: linear-gradient(135deg, rgba(212,160,23,0.25), rgba(255,107,0,0.2));
+    border-color: var(--gold);
+    color: var(--gold2);
+    box-shadow: 0 0 12px rgba(212,160,23,0.2);
+}
+
 /* ── DIVIDER ── */
 .gold-divider {
     height: 1px;
@@ -435,6 +532,13 @@ div[data-testid="stFormSubmitButton"] > button {
     line-height: 2;
     padding: 1.5rem 0 0;
     border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── EXAMPLE CHIPS (override secondary for non-lang buttons) ── */
+.stButton > button[kind="secondary"]:not([data-testid*="lang"]) {
+    border-radius: 8px !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap !important;
 }
 
 /* ── SPINNER ── */
@@ -576,13 +680,28 @@ Respond ONLY in this exact JSON format — no text before or after:
 }
 """
 
-def analyze(problem: str, location: str, key: str) -> dict:
+def analyze(problem: str, location: str, key: str, language: str = "Hinglish") -> dict:
+    lang_instruction = {
+        "Hinglish":  "Respond with all text fields in Hinglish (natural mix of Hindi and English, written in Roman script). Keep technical terms and portal URLs in English.",
+        "Hindi":     "Respond with all text fields in pure Hindi (Devanagari script). Keep portal URLs and technical terms in English.",
+        "English":   "Respond with all text fields in clear formal English.",
+        "Bengali":   "Respond with all text fields in Bengali (বাংলা script). Keep portal URLs and technical terms in English.",
+        "Tamil":     "Respond with all text fields in Tamil (தமிழ் script). Keep portal URLs and technical terms in English.",
+        "Telugu":    "Respond with all text fields in Telugu (తెలుగు script). Keep portal URLs and technical terms in English.",
+        "Marathi":   "Respond with all text fields in Marathi (Devanagari script). Keep portal URLs and technical terms in English.",
+        "Gujarati":  "Respond with all text fields in Gujarati (ગુજરાતી script). Keep portal URLs and technical terms in English.",
+        "Kannada":   "Respond with all text fields in Kannada (ಕನ್ನಡ script). Keep portal URLs and technical terms in English.",
+        "Malayalam": "Respond with all text fields in Malayalam (മലയാളം script). Keep portal URLs and technical terms in English.",
+        "Punjabi":   "Respond with all text fields in Punjabi (Gurmukhi script). Keep portal URLs and technical terms in English.",
+        "Odia":      "Respond with all text fields in Odia (ଓଡ଼ିଆ script). Keep portal URLs and technical terms in English.",
+    }.get(language, "Respond in English.")
+
     client = Groq(api_key=key)
     resp = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": f"Location: {location}\nProblem: {problem}\n\nRespond ONLY in the specified JSON format."}
+            {"role": "user", "content": f"Location: {location}\nProblem: {problem}\nLanguage instruction: {lang_instruction}\n\nRespond ONLY in the specified JSON format."}
         ],
         temperature=0.15,
         max_tokens=1800,
@@ -605,6 +724,25 @@ STATES = [
     "Ladakh","Chandigarh","Puducherry","Andaman & Nicobar","Lakshadweep"
 ]
 
+LANGUAGES = [
+    ("Hinglish", "हिं+EN", "Mix of Hindi & English"),
+    ("Hindi", "हिन्दी", "Pure Hindi"),
+    ("English", "EN", "English"),
+    ("Bengali", "বাংলা", "Bengali"),
+    ("Tamil", "தமிழ்", "Tamil"),
+    ("Telugu", "తెలుగు", "Telugu"),
+    ("Marathi", "मराठी", "Marathi"),
+    ("Gujarati", "ગુજરાતી", "Gujarati"),
+    ("Kannada", "ಕನ್ನಡ", "Kannada"),
+    ("Malayalam", "മലയാളം", "Malayalam"),
+    ("Punjabi", "ਪੰਜਾਬੀ", "Punjabi"),
+    ("Odia", "ଓଡ଼ିଆ", "Odia"),
+]
+
+# Init default language
+if "sel_lang" not in st.session_state:
+    st.session_state["sel_lang"] = "Hinglish"
+
 st.markdown('<div class="section-label">📍 Your Location</div>', unsafe_allow_html=True)
 c1, c2 = st.columns([3, 2])
 with c1:
@@ -612,7 +750,33 @@ with c1:
 with c2:
     city = st.text_input("City / District", placeholder="e.g., Varanasi", label_visibility="collapsed")
 
-st.markdown('<div class="section-label" style="margin-top:1.2rem">✍️ Describe Your Problem</div>', unsafe_allow_html=True)
+# ── Language Selector ─────────────────────────────────────────────────────────
+st.markdown('<div class="section-label" style="margin-top:1.2rem">🌐 Response Language</div>', unsafe_allow_html=True)
+
+# Render chips as buttons in a wrapped row using columns trick
+lang_cols = st.columns(len(LANGUAGES))
+for i, (lang_key, script, label) in enumerate(LANGUAGES):
+    is_active = st.session_state["sel_lang"] == lang_key
+    btn_style = "primary" if is_active else "secondary"
+    with lang_cols[i]:
+        if st.button(
+            f"{script}",
+            key=f"lang_{lang_key}",
+            help=label,
+            type=btn_style,
+            use_container_width=True
+        ):
+            st.session_state["sel_lang"] = lang_key
+            st.rerun()
+
+selected_language = st.session_state["sel_lang"]
+st.markdown(
+    f'<div style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin:0.3rem 0 1rem;text-align:center">'
+    f'Responding in <strong style="color:var(--gold)">{selected_language}</strong></div>',
+    unsafe_allow_html=True
+)
+
+st.markdown('<div class="section-label" style="margin-top:0.5rem">✍️ Describe Your Problem</div>', unsafe_allow_html=True)
 problem = st.text_area(
     "Problem",
     placeholder=(
@@ -663,7 +827,7 @@ if go:
         loc = f"{city.strip()}, {state}" if city.strip() else state
         with st.spinner("Consulting India's constitutional framework…"):
             try:
-                R = analyze(problem, loc, api_key.strip())
+                R = analyze(problem, loc, api_key.strip(), selected_language)
 
                 J = R.get("jurisdiction", "")
                 card_cls   = {"Central":"card-central","State":"card-state","Local":"card-local","Concurrent":"card-concurrent"}.get(J,"card-central")
