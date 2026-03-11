@@ -177,51 +177,61 @@ html, body, [class*="css"], .stApp {
     box-shadow: 0 0 0 3px rgba(212,160,23,0.15) !important;
 }
 
-/* ── SELECTBOX — full override for visibility ── */
-.stSelectbox > div > div {
-    background: #1e2a5e !important;
+/* ── SELECTBOX — nuclear override for text visibility ── */
+.stSelectbox [data-baseweb="select"] > div,
+.stSelectbox [data-baseweb="select"] > div:hover,
+.stSelectbox [data-baseweb="select"] > div:focus-within {
+    background-color: #1e2a5e !important;
     border: 1.5px solid var(--gold) !important;
     border-radius: 10px !important;
-    color: #FFFFFF !important;
-    font-family: 'DM Sans', sans-serif !important;
-    font-size: 0.95rem !important;
-    padding: 0.45rem 1rem !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
 }
-.stSelectbox > div > div > div {
+/* The actual selected text value */
+.stSelectbox [data-baseweb="select"] span,
+.stSelectbox [data-baseweb="select"] div[class*="singleValue"],
+.stSelectbox [data-baseweb="select"] [data-testid="stSelectboxVirtualDropdown"],
+.stSelectbox div[data-baseweb="select"] > div > div,
+.stSelectbox div[data-baseweb="select"] > div > div > div {
     color: #FFFFFF !important;
     font-weight: 500 !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.95rem !important;
+    -webkit-text-fill-color: #FFFFFF !important;
 }
 /* Arrow icon */
 .stSelectbox svg { fill: var(--gold) !important; stroke: var(--gold) !important; }
+/* Placeholder text */
+.stSelectbox [data-baseweb="select"] input {
+    color: #FFFFFF !important;
+    caret-color: var(--gold) !important;
+}
 
 /* Dropdown popup list */
+[data-baseweb="popover"] [data-baseweb="menu"],
 div[data-baseweb="popover"],
-div[data-baseweb="select"] ul,
-div[role="listbox"] {
-    background: #1a2460 !important;
-    border: 1px solid var(--border) !important;
+div[role="listbox"],
+ul[data-baseweb="menu"] {
+    background: #161f52 !important;
+    border: 1px solid rgba(212,160,23,0.35) !important;
     border-radius: 10px !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7) !important;
 }
-div[role="option"] {
+[data-baseweb="menu"] li,
+[data-baseweb="option"],
+div[role="option"],
+li[role="option"] {
     background: transparent !important;
     color: rgba(255,255,255,0.88) !important;
     font-family: 'DM Sans', sans-serif !important;
     font-size: 0.9rem !important;
-    padding: 0.5rem 1rem !important;
 }
+[data-baseweb="menu"] li:hover,
+[data-baseweb="option"]:hover,
 div[role="option"]:hover,
-div[role="option"][aria-selected="true"] {
-    background: rgba(212,160,23,0.18) !important;
-    color: var(--gold2) !important;
-}
-li[role="option"] {
-    color: rgba(255,255,255,0.88) !important;
-    background: transparent !important;
-}
-li[role="option"]:hover {
-    background: rgba(212,160,23,0.18) !important;
+li[role="option"]:hover,
+div[role="option"][aria-selected="true"],
+[data-baseweb="option"][aria-selected="true"] {
+    background: rgba(212,160,23,0.2) !important;
     color: var(--gold2) !important;
 }
 
@@ -233,11 +243,16 @@ label { color: rgba(255,255,255,0.7) !important; font-size: 0.85rem !important; 
     border: 1px solid var(--border) !important;
     color: rgba(255,255,255,0.8) !important;
     border-radius: 8px !important;
-    font-size: 0.82rem !important;
+    font-size: 0.8rem !important;
     font-family: 'DM Sans', sans-serif !important;
-    padding: 0.4rem 0.6rem !important;
+    padding: 0.45rem 0.5rem !important;
     transition: all 0.2s ease !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+    height: auto !important;
+    min-height: 2.4rem !important;
+    text-align: center !important;
 }
 .stButton > button:hover {
     background: rgba(212,160,23,0.12) !important;
