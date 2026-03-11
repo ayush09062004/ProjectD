@@ -2,7 +2,7 @@ import os
 from groq import Groq
 import json
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+client = Groq(api_key=os.environ.get("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"))
 
 # ─── Knowledge Base: Indian Constitutional Jurisdiction ───────────────────────
 
